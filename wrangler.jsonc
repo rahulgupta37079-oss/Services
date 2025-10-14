@@ -1,34 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "webapp",
+  "name": "passion3d-world",
   "compatibility_date": "2025-10-13",
   "pages_build_output_dir": "./dist",
   "compatibility_flags": [
     "nodejs_compat"
   ]
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "MY_KV_NAMESPACE",
-  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  //   }
-  // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "MY_BUCKET",
-  //     "bucket_name": "my-bucket"
-  //   }
-  // ],
+  // D1 Database configuration (uncomment and add database_id after creating D1 database)
+  // To create database: npx wrangler d1 create passion3d-production
+  // Then copy the database_id from output and paste below
   // "d1_databases": [
   //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
+  //     "binding": "DB",
+  //     "database_name": "passion3d-production",
+  //     "database_id": "YOUR_DATABASE_ID_HERE"
   //   }
-  // ],
-  // "ai": {
-  //   "binding": "AI"
-  // }
+  // ]
 }

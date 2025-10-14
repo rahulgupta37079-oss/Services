@@ -2,13 +2,52 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
 
-const app = new Hono()
+// Type definitions for Cloudflare bindings
+type Bindings = {
+  DB?: D1Database;
+  EMAIL_API_KEY?: string;
+  ADMIN_EMAIL?: string;
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
 
 // Enable CORS for API routes
 app.use('/api/*', cors())
 
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
+
+// Helper function to send email (placeholder - integrate with your email service)
+async function sendEmail(to: string, subject: string, body: string, apiKey?: string) {
+  // This is a placeholder for email integration
+  // You can integrate with services like:
+  // - Resend (recommended for Cloudflare Workers)
+  // - SendGrid
+  // - Mailgun
+  // - AWS SES
+  
+  console.log('Email would be sent:', { to, subject, body })
+  
+  // Example for Resend API:
+  // if (apiKey) {
+  //   const response = await fetch('https://api.resend.com/emails', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Authorization': `Bearer ${apiKey}`,
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       from: 'Passion 3D World <noreply@passion3dworld.com>',
+  //       to: [to],
+  //       subject: subject,
+  //       html: body
+  //     })
+  //   })
+  //   return response.json()
+  // }
+  
+  return { success: true, message: 'Email sent (simulation)' }
+}
 
 // API endpoint for quote requests
 app.post('/api/quote', async (c) => {
@@ -22,17 +61,72 @@ app.post('/api/quote', async (c) => {
       return c.json({ success: false, message: 'Missing required fields' }, 400)
     }
     
-    // In production, you would:
-    // 1. Send email notification
-    // 2. Store in database
-    // 3. Send confirmation email to customer
+    const quoteId = `QT${Date.now()}`
     
-    console.log('Quote request received:', data)
+    // Store in D1 database if available
+    if (c.env.DB) {
+      try {
+        await c.env.DB.prepare(`
+          INSERT INTO quotes (name, email, phone, service, material, quantity, description, status)
+          VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
+        `).bind(name, email, phone || null, service, material || null, quantity || 1, description || null).run()
+        
+        console.log('Quote saved to database')
+      } catch (dbError) {
+        console.error('Database error:', dbError)
+        // Continue even if DB fails
+      }
+    } else {
+      console.log('Quote request received (no DB):', data)
+    }
+    
+    // Send email notification to admin
+    if (c.env.EMAIL_API_KEY && c.env.ADMIN_EMAIL) {
+      await sendEmail(
+        c.env.ADMIN_EMAIL,
+        `New Quote Request - ${quoteId}`,
+        `
+          <h2>New 3D Printing Quote Request</h2>
+          <p><strong>Quote ID:</strong> ${quoteId}</p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+          <p><strong>Service:</strong> ${service}</p>
+          <p><strong>Material:</strong> ${material || 'Not specified'}</p>
+          <p><strong>Quantity:</strong> ${quantity || 1}</p>
+          <p><strong>Description:</strong></p>
+          <p>${description || 'No description provided'}</p>
+        `,
+        c.env.EMAIL_API_KEY
+      )
+    }
+    
+    // Send confirmation email to customer
+    if (c.env.EMAIL_API_KEY) {
+      await sendEmail(
+        email,
+        'Quote Request Received - Passion 3D World',
+        `
+          <h2>Thank you for your quote request!</h2>
+          <p>Hi ${name},</p>
+          <p>We've received your quote request (ID: ${quoteId}) and will get back to you within 24 hours with a detailed quote.</p>
+          <h3>Request Details:</h3>
+          <ul>
+            <li>Service: ${service}</li>
+            <li>Material: ${material || 'Not specified'}</li>
+            <li>Quantity: ${quantity || 1}</li>
+          </ul>
+          <p>If you have any questions, feel free to contact us at info@passion3dworld.com</p>
+          <p>Best regards,<br>Passion 3D World Team</p>
+        `,
+        c.env.EMAIL_API_KEY
+      )
+    }
     
     return c.json({ 
       success: true, 
       message: 'Thank you! We will contact you within 24 hours with a detailed quote.',
-      quoteId: `QT${Date.now()}`
+      quoteId: quoteId
     })
   } catch (error) {
     console.error('Quote request error:', error)
@@ -51,7 +145,55 @@ app.post('/api/contact', async (c) => {
       return c.json({ success: false, message: 'Missing required fields' }, 400)
     }
     
-    console.log('Contact form received:', data)
+    // Store in D1 database if available
+    if (c.env.DB) {
+      try {
+        await c.env.DB.prepare(`
+          INSERT INTO contacts (name, email, subject, message, status)
+          VALUES (?, ?, ?, ?, 'unread')
+        `).bind(name, email, subject || null, message).run()
+        
+        console.log('Contact message saved to database')
+      } catch (dbError) {
+        console.error('Database error:', dbError)
+        // Continue even if DB fails
+      }
+    } else {
+      console.log('Contact form received (no DB):', data)
+    }
+    
+    // Send email notification to admin
+    if (c.env.EMAIL_API_KEY && c.env.ADMIN_EMAIL) {
+      await sendEmail(
+        c.env.ADMIN_EMAIL,
+        `New Contact Message from ${name}`,
+        `
+          <h2>New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject || 'No subject'}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>
+          <p><strong>Reply to:</strong> ${email}</p>
+        `,
+        c.env.EMAIL_API_KEY
+      )
+    }
+    
+    // Send confirmation email to customer
+    if (c.env.EMAIL_API_KEY) {
+      await sendEmail(
+        email,
+        'Message Received - Passion 3D World',
+        `
+          <h2>Thank you for contacting us!</h2>
+          <p>Hi ${name},</p>
+          <p>We've received your message and will get back to you as soon as possible.</p>
+          <p>Best regards,<br>Passion 3D World Team</p>
+        `,
+        c.env.EMAIL_API_KEY
+      )
+    }
     
     return c.json({ 
       success: true, 
@@ -59,6 +201,42 @@ app.post('/api/contact', async (c) => {
     })
   } catch (error) {
     console.error('Contact form error:', error)
+    return c.json({ success: false, message: 'Server error occurred' }, 500)
+  }
+})
+
+// API endpoint to get all quotes (admin use - add authentication in production)
+app.get('/api/admin/quotes', async (c) => {
+  try {
+    if (!c.env.DB) {
+      return c.json({ success: false, message: 'Database not configured' }, 503)
+    }
+    
+    const result = await c.env.DB.prepare(`
+      SELECT * FROM quotes ORDER BY created_at DESC LIMIT 100
+    `).all()
+    
+    return c.json({ success: true, quotes: result.results })
+  } catch (error) {
+    console.error('Error fetching quotes:', error)
+    return c.json({ success: false, message: 'Server error occurred' }, 500)
+  }
+})
+
+// API endpoint to get all contacts (admin use - add authentication in production)
+app.get('/api/admin/contacts', async (c) => {
+  try {
+    if (!c.env.DB) {
+      return c.json({ success: false, message: 'Database not configured' }, 503)
+    }
+    
+    const result = await c.env.DB.prepare(`
+      SELECT * FROM contacts ORDER BY created_at DESC LIMIT 100
+    `).all()
+    
+    return c.json({ success: true, contacts: result.results })
+  } catch (error) {
+    console.error('Error fetching contacts:', error)
     return c.json({ success: false, message: 'Server error occurred' }, 500)
   }
 })

@@ -49,13 +49,83 @@ async function sendEmail(to: string, subject: string, body: string, apiKey?: str
   return { success: true, message: 'Email sent (simulation)' }
 }
 
-// API endpoint for quote requests
+// API endpoint for file upload
+app.post('/api/upload', async (c) => {
+  try {
+    const formData = await c.req.formData()
+    const file = formData.get('file') as File
+    
+    if (!file) {
+      return c.json({ success: false, message: 'No file uploaded' }, 400)
+    }
+    
+    // Check file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024
+    if (file.size > maxSize) {
+      return c.json({ success: false, message: 'File size exceeds 10MB limit' }, 400)
+    }
+    
+    // Check file type (allow common 3D model formats)
+    const allowedTypes = [
+      'application/octet-stream', // STL
+      'model/stl',
+      'application/sla',
+      'text/plain', // OBJ
+      'application/obj',
+      'model/obj',
+      'application/step', // STEP
+      'application/stp',
+      'model/step'
+    ]
+    
+    const fileName = file.name.toLowerCase()
+    const validExtensions = ['.stl', '.obj', '.step', '.stp', '.3mf', '.ply']
+    const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext))
+    
+    if (!hasValidExtension) {
+      return c.json({ 
+        success: false, 
+        message: 'Invalid file type. Please upload STL, OBJ, STEP, or 3MF files' 
+      }, 400)
+    }
+    
+    // Convert file to base64 for email attachment
+    const arrayBuffer = await file.arrayBuffer()
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+    
+    // Store file info
+    const fileInfo = {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      uploadedAt: new Date().toISOString(),
+      base64: base64.substring(0, 100) + '...' // Just store a preview
+    }
+    
+    console.log('File uploaded:', { name: file.name, size: file.size, type: file.type })
+    
+    return c.json({ 
+      success: true, 
+      message: 'File uploaded successfully',
+      file: {
+        name: file.name,
+        size: file.size,
+        type: file.type
+      }
+    })
+  } catch (error) {
+    console.error('File upload error:', error)
+    return c.json({ success: false, message: 'File upload failed' }, 500)
+  }
+})
+
+// API endpoint for quote requests (with file support)
 app.post('/api/quote', async (c) => {
   try {
     const data = await c.req.json()
     
     // Validate required fields
-    const { name, email, phone, service, material, quantity, description } = data
+    const { name, email, phone, service, material, quantity, description, fileName, fileSize } = data
     
     if (!name || !email || !service) {
       return c.json({ success: false, message: 'Missing required fields' }, 400)
@@ -94,6 +164,7 @@ app.post('/api/quote', async (c) => {
           <p><strong>Service:</strong> ${service}</p>
           <p><strong>Material:</strong> ${material || 'Not specified'}</p>
           <p><strong>Quantity:</strong> ${quantity || 1}</p>
+          ${fileName ? `<p><strong>File Uploaded:</strong> ${fileName} (${(fileSize / 1024 / 1024).toFixed(2)} MB)</p>` : ''}
           <p><strong>Description:</strong></p>
           <p>${description || 'No description provided'}</p>
         `,
@@ -598,11 +669,27 @@ app.get('/', (c) => {
                             <textarea name="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Describe your project requirements, dimensions, color preferences, finish requirements, delivery timeline, etc."></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">3D File Upload</label>
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">3D File Upload (Optional)</label>
+                            <input type="file" id="fileInput" accept=".stl,.obj,.step,.stp,.3mf,.ply" class="hidden">
+                            <div id="fileButton" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
                                 <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                                <p class="text-gray-600 mb-2">Upload your 3D file (STL, OBJ, STEP)</p>
-                                <p class="text-sm text-gray-500">You can also email files to: info@passion3dworld.com</p>
+                                <p class="text-gray-600 mb-2">Click to upload your 3D file</p>
+                                <p class="text-sm text-gray-500">Supported: STL, OBJ, STEP, 3MF (Max 10MB)</p>
+                                <p class="text-xs text-gray-400 mt-2">Or email files to: info@passion3dworld.com</p>
+                            </div>
+                            <div id="fileInfo" class="hidden mt-3 bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-alt text-green-600 text-2xl mr-3"></i>
+                                        <div>
+                                            <p class="font-semibold text-gray-800" id="fileName">file.stl</p>
+                                            <p class="text-sm text-gray-600" id="fileSize">0 MB</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="removeFile" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-times text-xl"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
@@ -747,7 +834,7 @@ app.get('/', (c) => {
                                 <i class="fas fa-phone text-primary text-xl mt-1 mr-4"></i>
                                 <div>
                                     <h4 class="font-semibold">Phone</h4>
-                                    <p class="text-gray-600">+91 XXXXX XXXXX</p>
+                                    <p class="text-gray-600">+91 9137361474</p>
                                 </div>
                             </div>
                             <div class="flex items-start">
@@ -761,7 +848,7 @@ app.get('/', (c) => {
                                 <i class="fas fa-clock text-primary text-xl mt-1 mr-4"></i>
                                 <div>
                                     <h4 class="font-semibold">Business Hours</h4>
-                                    <p class="text-gray-600">Mon-Fri: 9:00 AM - 6:00 PM<br>Sat: 10:00 AM - 4:00 PM</p>
+                                    <p class="text-gray-600">Mon-Fri: 9:00 AM - 12:00 PM<br>Sat: 9:00 AM - 12:00 PM</p>
                                 </div>
                             </div>
                         </div>

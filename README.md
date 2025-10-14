@@ -303,8 +303,8 @@ webapp/
 ## 📞 Contact Information
 
 - **Email**: info@passion3dworld.com
-- **Phone**: +91 XXXXX XXXXX
-- **Hours**: Mon-Fri 9AM-6PM, Sat 10AM-4PM
+- **Phone**: +91 9137361474
+- **Hours**: Mon-Fri 9:00 AM - 12:00 PM, Sat 9:00 AM - 12:00 PM
 
 ## 📄 Available Scripts
 

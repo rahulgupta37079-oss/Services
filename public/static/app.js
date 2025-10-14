@@ -57,12 +57,82 @@ function calculatePrice() {
     priceResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// Quote Form Handler
+// Global variable to store uploaded file info
+let uploadedFile = null;
+
+// File Upload Handler
+function setupFileUpload() {
+    const fileInput = document.getElementById('fileInput');
+    const fileButton = document.getElementById('fileButton');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const removeFile = document.getElementById('removeFile');
+    
+    if (!fileInput) return;
+    
+    // Trigger file input when button is clicked
+    fileButton?.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // Handle file selection
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file
+        const validExtensions = ['.stl', '.obj', '.step', '.stp', '.3mf', '.ply'];
+        const fileExt = '.' + file.name.split('.').pop().toLowerCase();
+        
+        if (!validExtensions.includes(fileExt)) {
+            alert('Invalid file type. Please upload STL, OBJ, STEP, or 3MF files');
+            fileInput.value = '';
+            return;
+        }
+        
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size exceeds 10MB limit');
+            fileInput.value = '';
+            return;
+        }
+        
+        // Show file info
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        fileInfo.classList.remove('hidden');
+        
+        // Store file info
+        uploadedFile = {
+            name: file.name,
+            size: file.size,
+            type: file.type
+        };
+        
+        console.log('File selected:', uploadedFile);
+    });
+    
+    // Handle file removal
+    removeFile?.addEventListener('click', () => {
+        fileInput.value = '';
+        fileInfo.classList.add('hidden');
+        uploadedFile = null;
+    });
+}
+
+// Quote Form Handler with File Upload
 document.getElementById('quoteForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
+    
+    // Add file info if uploaded
+    if (uploadedFile) {
+        data.fileName = uploadedFile.name;
+        data.fileSize = uploadedFile.size;
+        data.fileType = uploadedFile.type;
+    }
     
     const submitButton = e.target.querySelector('button[type="submit"]');
     const messageDiv = document.getElementById('quoteMessage');
@@ -82,8 +152,13 @@ document.getElementById('quoteForm').addEventListener('submit', async (e) => {
         `;
         messageDiv.classList.remove('hidden');
         
-        // Reset form
+        // Reset form and file
         e.target.reset();
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        if (fileInput) fileInput.value = '';
+        if (fileInfo) fileInfo.classList.add('hidden');
+        uploadedFile = null;
         
     } catch (error) {
         messageDiv.className = 'bg-red-50 border-2 border-red-500 rounded-lg p-4 text-red-700';
@@ -175,6 +250,11 @@ document.getElementById('tech').addEventListener('change', function() {
             <option value="resin">Nylon PA12</option>
         `;
     }
+});
+
+// Initialize file upload when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    setupFileUpload();
 });
 
 // Mobile menu toggle (if needed)

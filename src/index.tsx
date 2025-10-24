@@ -347,8 +347,30 @@ app.get('/', (c) => {
                         <i class="fas fa-cube text-primary text-3xl mr-3"></i>
                         <h1 class="text-2xl font-bold text-gray-900">Passion 3D World</h1>
                     </div>
-                    <div class="hidden md:flex space-x-8">
-                        <a href="#services" class="text-gray-700 hover:text-primary transition">Services</a>
+                    <div class="hidden md:flex space-x-8 items-center">
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-primary transition flex items-center">
+                                Services <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute hidden group-hover:block bg-white shadow-xl rounded-lg mt-2 py-2 w-56 z-50">
+                                <a href="/3d-printing-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-print mr-2 text-primary"></i>3D Printing Quote
+                                </a>
+                                <a href="/cnc-machining-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-cogs mr-2 text-primary"></i>CNC Machining Quote
+                                </a>
+                                <a href="/sheet-metal-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-industry mr-2 text-primary"></i>Sheet Metal Quote
+                                </a>
+                                <a href="/pcb-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-microchip mr-2 text-primary"></i>PCB Quote
+                                </a>
+                                <div class="border-t my-2"></div>
+                                <a href="#services" class="block px-4 py-2 hover:bg-indigo-50 text-gray-600 text-sm">
+                                    View All Services
+                                </a>
+                            </div>
+                        </div>
                         <a href="#pricing" class="text-gray-700 hover:text-primary transition">Pricing</a>
                         <a href="#materials" class="text-gray-700 hover:text-primary transition">Materials</a>
                         <a href="#portfolio" class="text-gray-700 hover:text-primary transition">Portfolio</a>
@@ -365,8 +387,8 @@ app.get('/', (c) => {
         <section class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-5xl font-bold mb-6">Professional 3D Printing Services</h2>
-                    <p class="text-xl mb-8 text-indigo-100">Transform your ideas into reality with high-quality 3D printing</p>
+                    <h2 class="text-5xl font-bold mb-6">Professional Manufacturing Services</h2>
+                    <p class="text-xl mb-8 text-indigo-100">3D Printing • CNC Machining • Sheet Metal • PCB Manufacturing</p>
                     <div class="flex justify-center gap-4 flex-wrap">
                         <a href="#quote" class="bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
                             Request Quote
@@ -925,6 +947,530 @@ app.get('/', (c) => {
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
         <script src="/static/app.js"></script>
+    </body>
+    </html>
+  `)
+})
+
+// 3D Printing Quote Page
+app.get('/3d-printing-quote', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>3D Printing Quote | Passion 3D World</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                    }
+                }
+            }
+        }
+        </script>
+        <link href="/static/style.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-cube text-primary text-3xl mr-3"></i>
+                        <a href="/" class="text-2xl font-bold text-gray-900">Passion 3D World</a>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-primary transition flex items-center">
+                                Services <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute hidden group-hover:block bg-white shadow-xl rounded-lg mt-2 py-2 w-56 z-50">
+                                <a href="/3d-printing-quote" class="block px-4 py-2 hover:bg-indigo-50 text-primary font-semibold">
+                                    <i class="fas fa-print mr-2"></i>3D Printing
+                                </a>
+                                <a href="/cnc-machining-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-cogs mr-2 text-primary"></i>CNC Machining
+                                </a>
+                                <a href="/sheet-metal-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-industry mr-2 text-primary"></i>Sheet Metal
+                                </a>
+                                <a href="/pcb-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-microchip mr-2 text-primary"></i>PCB Manufacturing
+                                </a>
+                            </div>
+                        </div>
+                        <a href="/#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+                    </div>
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        <i class="fas fa-phone mr-2"></i>Call Now
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-print text-primary mr-3"></i>
+                    3D Printing Quote Calculator
+                </h1>
+                <p class="text-xl text-gray-600">Get instant pricing for your 3D printing project</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Quote Form -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-6">Project Details</h2>
+                        
+                        <form id="printingQuoteForm" class="space-y-6">
+                            <!-- Technology Selection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">
+                                    <i class="fas fa-cog mr-2 text-primary"></i>Technology
+                                </label>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="technology" value="fdm" checked class="peer sr-only">
+                                        <div class="border-2 border-gray-300 rounded-lg p-4 peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">FDM</h4>
+                                            <p class="text-sm text-gray-600">From ₹50/part</p>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="technology" value="sla" class="peer sr-only">
+                                        <div class="border-2 border-gray-300 rounded-lg p-4 peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">SLA/Resin</h4>
+                                            <p class="text-sm text-gray-600">From ₹100/part</p>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="technology" value="sls" class="peer sr-only">
+                                        <div class="border-2 border-gray-300 rounded-lg p-4 peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">SLS</h4>
+                                            <p class="text-sm text-gray-600">From ₹200/part</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Material Selection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-cube mr-2 text-primary"></i>Material
+                                </label>
+                                <select id="material" name="material" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="pla">PLA - Standard</option>
+                                    <option value="abs">ABS - Heat Resistant</option>
+                                    <option value="petg">PETG - Durable</option>
+                                    <option value="tpu">TPU - Flexible</option>
+                                    <option value="resin">Standard Resin</option>
+                                    <option value="tough">Tough Resin</option>
+                                    <option value="nylon">Nylon PA12</option>
+                                </select>
+                            </div>
+
+                            <!-- Dimensions -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-ruler-combined mr-2 text-primary"></i>Dimensions (mm)
+                                </label>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <input type="number" id="length" placeholder="Length" value="50" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <input type="number" id="width" placeholder="Width" value="50" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <input type="number" id="height" placeholder="Height" value="50" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                            </div>
+
+                            <!-- Infill & Surface Finish -->
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-percentage mr-2 text-primary"></i>Infill Density
+                                    </label>
+                                    <select id="infill" name="infill" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="10">10% - Prototype</option>
+                                        <option value="20" selected>20% - Standard</option>
+                                        <option value="50">50% - Strong</option>
+                                        <option value="100">100% - Solid</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-paint-brush mr-2 text-primary"></i>Surface Finish
+                                    </label>
+                                    <select name="finish" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="standard">Standard</option>
+                                        <option value="smooth">Smooth (Sanding)</option>
+                                        <option value="painted">Painted</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Quantity & Color -->
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-sort-numeric-up mr-2 text-primary"></i>Quantity
+                                    </label>
+                                    <input type="number" id="quantity" name="quantity" value="1" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-palette mr-2 text-primary"></i>Color
+                                    </label>
+                                    <select name="color" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="standard">Standard (White/Gray)</option>
+                                        <option value="black">Black</option>
+                                        <option value="custom">Custom Color (+10%)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- File Upload -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-cloud-upload-alt mr-2 text-primary"></i>Upload 3D File
+                                </label>
+                                <input type="file" id="fileInput3d" accept=".stl,.obj,.step,.stp,.3mf" class="hidden">
+                                <div id="fileButton3d" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-primary transition">
+                                    <i class="fas fa-file-upload text-3xl text-gray-400 mb-2"></i>
+                                    <p class="text-gray-600">Click to upload STL, OBJ, STEP (Max 10MB)</p>
+                                </div>
+                                <div id="fileInfo3d" class="hidden mt-3 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-alt text-green-600 mr-3"></i>
+                                        <span id="fileName3d" class="font-semibold"></span>
+                                    </div>
+                                    <button type="button" id="removeFile3d" class="text-red-500 hover:text-red-700">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="calculate3DPrice()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                                <i class="fas fa-calculator mr-2"></i>Calculate Price
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-8 sticky top-24">
+                        <h3 class="text-xl font-bold mb-6">Price Summary</h3>
+                        
+                        <div id="priceBreakdown" class="space-y-4 mb-6">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Base Price:</span>
+                                <span id="basePrice">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Material:</span>
+                                <span id="materialCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Quantity (×<span id="qtyDisplay">1</span>):</span>
+                                <span id="quantityCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-green-600">
+                                <span>Bulk Discount:</span>
+                                <span id="discount">-₹0</span>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between text-2xl font-bold text-primary">
+                                <span>Total:</span>
+                                <span id="totalPrice">₹0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 rounded-lg p-4 mb-6">
+                            <h4 class="font-semibold mb-2">
+                                <i class="fas fa-info-circle text-primary mr-2"></i>Includes:
+                            </h4>
+                            <ul class="text-sm space-y-1 text-gray-700">
+                                <li>✓ 3D Printing</li>
+                                <li>✓ Support Removal</li>
+                                <li>✓ Basic Finishing</li>
+                                <li>✓ Quality Check</li>
+                            </ul>
+                        </div>
+
+                        <a href="tel:+919137361474" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-green-700 transition mb-3">
+                            <i class="fas fa-phone mr-2"></i>Call to Order
+                        </a>
+                        <a href="mailto:info@passion3dworld.com" class="block w-full border-2 border-primary text-primary text-center py-3 rounded-lg font-semibold hover:bg-indigo-50 transition">
+                            <i class="fas fa-envelope mr-2"></i>Email Quote
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/quote-calculator.js"></script>
+    </body>
+    </html>
+  `)
+})
+
+// CNC Machining Quote Page  
+app.get('/cnc-machining-quote', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CNC Machining Quote | Passion 3D World</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="/static/style.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <header class="bg-white shadow-sm">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">
+                    <i class="fas fa-cube text-primary mr-2"></i>Passion 3D World
+                </a>
+                <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg">
+                    <i class="fas fa-phone mr-2"></i>Call Now
+                </a>
+            </nav>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold mb-4">
+                    <i class="fas fa-cogs text-primary mr-3"></i>CNC Machining Quote
+                </h1>
+                <p class="text-xl text-gray-600">Precision CNC milling and turning services</p>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-8">
+                <h3 class="font-bold text-lg mb-2">
+                    <i class="fas fa-wrench text-yellow-600 mr-2"></i>CNC Machining Service
+                </h3>
+                <p class="text-gray-700 mb-4">
+                    We're currently setting up our CNC machining capabilities. Please contact us directly for quotes.
+                </p>
+                <div class="flex gap-4">
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
+                        <i class="fas fa-phone mr-2"></i>Call: +91 9137361474
+                    </a>
+                    <a href="mailto:info@passion3dworld.com" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold">
+                        <i class="fas fa-envelope mr-2"></i>Email Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">CNC Milling</h3>
+                    <p class="text-gray-600 mb-4">3-axis, 4-axis, and 5-axis milling</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Aluminum, Steel, Brass</li>
+                        <li>✓ High precision ±0.01mm</li>
+                        <li>✓ Complex geometries</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">CNC Turning</h3>
+                    <p class="text-gray-600 mb-4">Precision lathe work</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Cylindrical parts</li>
+                        <li>✓ Threading capabilities</li>
+                        <li>✓ Various materials</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">Surface Finishing</h3>
+                    <p class="text-gray-600 mb-4">Professional finishing</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Anodizing</li>
+                        <li>✓ Powder coating</li>
+                        <li>✓ Polishing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
+// Sheet Metal Quote Page
+app.get('/sheet-metal-quote', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sheet Metal Quote | Passion 3D World</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="/static/style.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <header class="bg-white shadow-sm">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">
+                    <i class="fas fa-cube text-primary mr-2"></i>Passion 3D World
+                </a>
+                <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg">
+                    <i class="fas fa-phone mr-2"></i>Call Now
+                </a>
+            </nav>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold mb-4">
+                    <i class="fas fa-industry text-primary mr-3"></i>Sheet Metal Fabrication Quote
+                </h1>
+                <p class="text-xl text-gray-600">Custom metal bending, cutting, and forming</p>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-8">
+                <h3 class="font-bold text-lg mb-2">
+                    <i class="fas fa-hard-hat text-yellow-600 mr-2"></i>Sheet Metal Service
+                </h3>
+                <p class="text-gray-700 mb-4">
+                    We're expanding our sheet metal fabrication services. Contact us for custom quotes.
+                </p>
+                <div class="flex gap-4">
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
+                        <i class="fas fa-phone mr-2"></i>Call: +91 9137361474
+                    </a>
+                    <a href="mailto:info@passion3dworld.com" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold">
+                        <i class="fas fa-envelope mr-2"></i>Email Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">Laser Cutting</h3>
+                    <p class="text-gray-600 mb-4">Precision cutting services</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Steel, Aluminum, Stainless</li>
+                        <li>✓ Up to 20mm thickness</li>
+                        <li>✓ Complex patterns</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">Metal Bending</h3>
+                    <p class="text-gray-600 mb-4">CNC press brake forming</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Accurate angles</li>
+                        <li>✓ Multiple bends</li>
+                        <li>✓ Various materials</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">Welding & Assembly</h3>
+                    <p class="text-gray-600 mb-4">Professional fabrication</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ TIG & MIG welding</li>
+                        <li>✓ Assembly services</li>
+                        <li>✓ Finishing options</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
+// PCB Manufacturing Quote Page
+app.get('/pcb-quote', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PCB Manufacturing Quote | Passion 3D World</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="/static/style.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <header class="bg-white shadow-sm">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold">
+                    <i class="fas fa-cube text-primary mr-2"></i>Passion 3D World
+                </a>
+                <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg">
+                    <i class="fas fa-phone mr-2"></i>Call Now
+                </a>
+            </nav>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold mb-4">
+                    <i class="fas fa-microchip text-primary mr-3"></i>PCB Manufacturing Quote
+                </h1>
+                <p class="text-xl text-gray-600">Custom PCB fabrication and assembly</p>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-8">
+                <h3 class="font-bold text-lg mb-2">
+                    <i class="fas fa-microchip text-yellow-600 mr-2"></i>PCB Manufacturing Service
+                </h3>
+                <p class="text-gray-700 mb-4">
+                    We're establishing partnerships for PCB manufacturing. Please contact us for quotes and lead times.
+                </p>
+                <div class="flex gap-4">
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
+                        <i class="fas fa-phone mr-2"></i>Call: +91 9137361474
+                    </a>
+                    <a href="mailto:info@passion3dworld.com" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold">
+                        <i class="fas fa-envelope mr-2"></i>Email Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">Standard PCB</h3>
+                    <p class="text-gray-600 mb-4">Single and double-sided boards</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ FR-4 material</li>
+                        <li>✓ Lead-free HASL</li>
+                        <li>✓ Fast turnaround</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">Multi-Layer PCB</h3>
+                    <p class="text-gray-600 mb-4">4 to 12 layer boards</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Controlled impedance</li>
+                        <li>✓ HDI options</li>
+                        <li>✓ Various finishes</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-3">PCB Assembly</h3>
+                    <p class="text-gray-600 mb-4">SMT and through-hole</p>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Component sourcing</li>
+                        <li>✓ Testing services</li>
+                        <li>✓ Low to high volume</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </body>
     </html>
   `)

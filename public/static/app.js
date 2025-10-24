@@ -257,5 +257,53 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFileUpload();
 });
 
+// Services Dropdown Handler - Make it clickable for mobile/touch devices
+function setupServicesDropdown() {
+    const dropdownButton = document.querySelector('.relative.group button');
+    const dropdownMenu = document.querySelector('.relative.group .absolute');
+    
+    if (!dropdownButton || !dropdownMenu) return;
+    
+    let isOpen = false;
+    
+    // Toggle dropdown on click
+    dropdownButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen = !isOpen;
+        
+        if (isOpen) {
+            dropdownMenu.classList.remove('hidden');
+            dropdownMenu.classList.add('block');
+        } else {
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            isOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        }
+    });
+    
+    // Close dropdown when clicking a link inside
+    const dropdownLinks = dropdownMenu.querySelectorAll('a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            isOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        });
+    });
+}
+
+// Initialize dropdown on page load
+document.addEventListener('DOMContentLoaded', () => {
+    setupServicesDropdown();
+});
+
 // Mobile menu toggle (if needed)
 console.log('Passion 3D World - 3D Printing Service Page Loaded');

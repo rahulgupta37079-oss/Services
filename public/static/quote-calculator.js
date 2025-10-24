@@ -61,8 +61,54 @@ function calculate3DPrice() {
     document.getElementById('totalPrice').textContent = `₹${Math.round(quantityTotal)}`;
 }
 
+// Services Dropdown Handler - Make it clickable for mobile/touch devices
+function setupServicesDropdown() {
+    const dropdownButton = document.querySelector('.relative.group button');
+    const dropdownMenu = document.querySelector('.relative.group .absolute');
+    
+    if (!dropdownButton || !dropdownMenu) return;
+    
+    let isOpen = false;
+    
+    // Toggle dropdown on click
+    dropdownButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen = !isOpen;
+        
+        if (isOpen) {
+            dropdownMenu.classList.remove('hidden');
+            dropdownMenu.classList.add('block');
+        } else {
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            isOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        }
+    });
+    
+    // Close dropdown when clicking a link inside
+    const dropdownLinks = dropdownMenu.querySelectorAll('a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            isOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        });
+    });
+}
+
 // File upload handling for 3D printing page
 document.addEventListener('DOMContentLoaded', () => {
+    // Setup clickable dropdown
+    setupServicesDropdown();
+    
     const fileInput = document.getElementById('fileInput3d');
     const fileButton = document.getElementById('fileButton3d');
     const fileInfo = document.getElementById('fileInfo3d');

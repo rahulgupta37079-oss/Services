@@ -382,8 +382,54 @@ function calculatePCBPrice() {
     document.getElementById('pcbTotalPrice').textContent = `₹${Math.round(grandTotal)}`;
 }
 
+// Services Dropdown Handler - Make it clickable for mobile/touch devices
+function setupServicesDropdown() {
+    const dropdownButton = document.querySelector('.relative.group button');
+    const dropdownMenu = document.querySelector('.relative.group .absolute');
+    
+    if (!dropdownButton || !dropdownMenu) return;
+    
+    let isOpen = false;
+    
+    // Toggle dropdown on click
+    dropdownButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen = !isOpen;
+        
+        if (isOpen) {
+            dropdownMenu.classList.remove('hidden');
+            dropdownMenu.classList.add('block');
+        } else {
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            isOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        }
+    });
+    
+    // Close dropdown when clicking a link inside
+    const dropdownLinks = dropdownMenu.querySelectorAll('a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            isOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+        });
+    });
+}
+
 // Initialize calculators on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Setup clickable dropdown
+    setupServicesDropdown();
+    
     // CNC Calculator
     if (typeof calculateCNCPrice === 'function' && document.getElementById('cncMaterial')) {
         calculateCNCPrice();

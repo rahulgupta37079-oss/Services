@@ -1,0 +1,35 @@
+{
+  "name": "webapp",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:sandbox": "wrangler pages dev dist --ip 0.0.0.0 --port 3000",
+    "dev:db": "wrangler pages dev dist --d1=passion3d-production --local --ip 0.0.0.0 --port 3000",
+    "build": "vite build",
+    "preview": "wrangler pages dev dist",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name passion3d-world",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
+    "test": "curl http://localhost:3000",
+    "db:create": "wrangler d1 create passion3d-production",
+    "db:migrate:local": "wrangler d1 migrations apply passion3d-production --local",
+    "db:migrate:prod": "wrangler d1 migrations apply passion3d-production",
+    "db:list": "wrangler d1 list",
+    "db:console:local": "wrangler d1 execute passion3d-production --local",
+    "db:console:prod": "wrangler d1 execute passion3d-production",
+    "db:query:quotes": "wrangler d1 execute passion3d-production --command='SELECT * FROM quotes ORDER BY created_at DESC LIMIT 10'",
+    "db:query:contacts": "wrangler d1 execute passion3d-production --command='SELECT * FROM contacts ORDER BY created_at DESC LIMIT 10'",
+    "secret:email": "wrangler pages secret put EMAIL_API_KEY --project-name passion3d-world",
+    "secret:admin": "wrangler pages secret put ADMIN_EMAIL --project-name passion3d-world",
+    "logs": "wrangler pages deployment tail --project-name passion3d-world"
+  },
+  "dependencies": {
+    "hono": "^4.9.12"
+  },
+  "devDependencies": {
+    "@hono/vite-build": "^1.2.0",
+    "@hono/vite-dev-server": "^0.18.2",
+    "vite": "^6.3.5",
+    "wrangler": "^4.4.0"
+  }
+}

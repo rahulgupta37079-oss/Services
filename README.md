@@ -1,13 +1,17 @@
-# Passion 3D World - 3D Printing Service
+# Passion 3D World - Professional Manufacturing Services
 
-A professional, modern 3D printing service website built with Hono and Cloudflare Pages, featuring database storage and email notifications.
+A comprehensive professional manufacturing services platform built with Hono and Cloudflare Pages, featuring real-time pricing calculators for 3D Printing, CNC Machining, Sheet Metal Fabrication, and PCB Manufacturing.
 
 ## Project Overview
 - **Name**: Passion 3D World
-- **Goal**: Provide a comprehensive online platform for 3D printing services
+- **Goal**: Provide a comprehensive online platform for professional manufacturing services
 - **Features**: 
-  - Multi-technology printing services (FDM, SLA, SLS)
-  - Interactive pricing calculator
+  - **4 Manufacturing Services** with interactive calculators:
+    - 3D Printing (FDM, SLA, SLS)
+    - CNC Machining (Milling, Turning, Finishing)
+    - Sheet Metal Fabrication (Cutting, Bending, Welding)
+    - PCB Manufacturing (1-12 layers, Assembly)
+  - Real-time pricing calculators for all services
   - Quote request system with database storage
   - Contact form with email notifications
   - Service showcase and portfolio
@@ -17,22 +21,80 @@ A professional, modern 3D printing service website built with Hono and Cloudflar
 
 ## 🌐 URLs
 - **Production**: https://passion3d-world.pages.dev
-- **Latest Deployment**: https://799ff09d.passion3d-world.pages.dev
+- **Latest Deployment**: https://038e02fb.passion3d-world.pages.dev
 - **GitHub**: https://github.com/rahulgupta37079-oss/Services
 - **Development**: https://3000-ibqpkyuq1wn0l5lkt2bc5-6532622b.e2b.dev
+
+### Service Calculator Pages
+- **3D Printing**: https://passion3d-world.pages.dev/3d-printing-quote
+- **CNC Machining**: https://passion3d-world.pages.dev/cnc-machining-quote
+- **Sheet Metal**: https://passion3d-world.pages.dev/sheet-metal-quote
+- **PCB Manufacturing**: https://passion3d-world.pages.dev/pcb-quote
 
 ## ✅ Currently Completed Features
 
 ### Main Sections
-1. **Hero Section** - Eye-catching gradient header with call-to-action
-2. **Services Showcase** - FDM, SLA, and SLS printing services with detailed descriptions
-3. **Materials Catalog** - 8 different material options (PLA, ABS, PETG, TPU, Resins, Nylon)
-4. **Pricing Calculator** - Interactive tool to estimate project costs
-5. **Quote Request Form** - Comprehensive form for project submissions
-6. **Portfolio Gallery** - Showcase of work examples
-7. **Process Flow** - 4-step explanation of how the service works
-8. **FAQ Section** - Common questions and answers
-9. **Contact Section** - Contact information and message form
+1. **Hero Section** - Professional gradient header showcasing all manufacturing services
+2. **Services Dropdown Navigation** - Quick access to all 4 manufacturing service calculators
+3. **3D Printing Page** - FDM, SLA, SLS with interactive calculator
+4. **CNC Machining Page** - Full calculator with material selection and machine time estimation
+5. **Sheet Metal Page** - Complete calculator with thickness, bending, and welding options
+6. **PCB Manufacturing Page** - Comprehensive calculator with layer count and pricing tiers
+7. **Materials Catalog** - 8+ material options across all services
+8. **Portfolio Gallery** - Showcase of work examples
+9. **Process Flow** - 4-step explanation of how the service works
+10. **FAQ Section** - Common questions and answers
+11. **Contact Section** - Contact information and message form
+
+### Manufacturing Calculators (All 4 Services)
+
+#### 3D Printing Calculator
+- Technology selection (FDM, SLA, SLS)
+- 7 material options (PLA, ABS, PETG, TPU, Resin, Tough, Nylon)
+- Part dimensions (Length × Width × Height)
+- Infill density selector (10% to 100%)
+- Quantity with bulk discounts (5+ units: 10% off, 10+ units: 15% off)
+- Surface finish options
+- Real-time price calculation
+- File upload support (STL, OBJ, STEP, 3MF, PLY)
+
+#### CNC Machining Calculator ✨ NEW
+- 8 material options (Aluminum, Steel, Stainless, Brass, Copper, Plastics, Titanium)
+- Part dimensions with automatic surface area calculation
+- 4 complexity levels (Simple, Medium, Complex, Very Complex)
+- Machine time estimation based on volume and complexity
+- 6 surface finish options (As Machined, Deburred, Bead Blasted, Anodized, Powder Coated, Polished)
+- Quantity discounts (10+ units: 10%, 20+ units: 15%, 50+ units: 20%)
+- Detailed cost breakdown (Material, Machining, Setup, Finish)
+
+#### Sheet Metal Calculator ✨ NEW
+- 5 material types (Mild Steel, Stainless, Aluminum, Galvanized, Copper)
+- 15 thickness options (0.5mm to 20mm)
+- Sheet dimensions with automatic area and perimeter calculation
+- Number of bends input
+- 3 bending complexity levels (Simple, Medium, Complex)
+- 5 welding options (None, Spot, Seam Short, Seam Long, Full Assembly)
+- 6 surface finish options
+- Quantity discounts (10+ units: 10%, 20+ units: 15%, 50+ units: 20%, 100+ units: 25%)
+
+#### PCB Manufacturing Calculator ✨ NEW
+- Layer count selector (1, 2, 4, 6, 8, 10, 12 layers)
+- Board dimensions (Length × Width in mm)
+- Board thickness options (0.8mm to 2.0mm)
+- Copper weight selection (1oz, 2oz, 3oz)
+- 6 surface finish options (HASL, Lead-Free HASL, ENIG, Immersion Silver, Tin, OSP)
+- Silkscreen options (None, One Side, Both Sides)
+- **7 Quantity Pricing Tiers**:
+  - 5-9 units: 10% off
+  - 10-19 units: 15% off
+  - 20-49 units: 20% off
+  - 50-99 units: 25% off
+  - 100-499 units: 30% off
+  - 500-999 units: 35% off
+  - 1000+ units: 40% off
+- Optional PCB Assembly with component count
+- Assembly cost calculation (setup + per-component placement)
+- Detailed pricing breakdown with tier information
 
 ### Backend Features
 - **Database Integration**: Cloudflare D1 SQLite database for storing quotes and contacts
@@ -48,17 +110,20 @@ A professional, modern 3D printing service website built with Hono and Cloudflar
 - `GET /api/admin/contacts` - Retrieve all contact messages (requires authentication in production)
 
 ### Interactive Features
-- Real-time price calculation based on:
-  - Technology type (FDM/SLA/SLS)
-  - Material selection
-  - Dimensions (L x W x H)
-  - Quantity (with bulk discounts: 10% for 5-9 units, 15% for 10+)
-  - Infill density
+- **Real-time Price Calculators** for all 4 manufacturing services
+- **Instant Updates**: Prices recalculate automatically on any input change
+- **Detailed Breakdowns**: See cost components (material, labor, setup, finish)
+- **Bulk Discounts**: Automatic volume-based pricing across all services
+- **Surface Area Calculations**: Auto-calculated for CNC and Sheet Metal
+- **Machine Time Estimation**: Real-time estimates for CNC machining
+- **Pricing Tiers**: 7-tier volume pricing for PCB manufacturing
+- **Assembly Calculator**: Component count affects PCB assembly costs
 - Form validation and error handling
 - Success/error message display
 - Smooth scrolling navigation
 - Responsive design with Tailwind CSS
 - Custom animations and hover effects
+- Sticky navigation with service dropdown menu
 
 ## 🗄️ Data Architecture
 
@@ -205,17 +270,20 @@ See `SETUP.md` for detailed setup instructions.
 
 ## 📋 Features Not Yet Implemented
 
-- [ ] File upload functionality for 3D models
 - [ ] Authentication for admin endpoints
 - [ ] Admin dashboard UI for managing quotes
 - [ ] Payment integration (Stripe)
 - [ ] Real portfolio images
-- [ ] Online 3D model viewer
+- [ ] Online 3D model viewer for STL files
 - [ ] Customer testimonials section
 - [ ] Blog/resources section
 - [ ] User account system with order tracking
 - [ ] Email automation workflows
 - [ ] Quote status tracking for customers
+- [ ] Advanced calculator features:
+  - [ ] CNC: CAD file upload for automatic surface area detection
+  - [ ] Sheet Metal: DXF file upload for bend detection
+  - [ ] PCB: Gerber file upload for automated quoting
 
 ## 🎯 Recommended Next Steps
 
@@ -257,41 +325,58 @@ See `SETUP.md` for detailed setup instructions.
 ```
 webapp/
 ├── src/
-│   └── index.tsx              # Main Hono app with API routes & email
+│   └── index.tsx                      # Main Hono app with all 4 service routes
 ├── public/
 │   └── static/
-│       ├── app.js             # Frontend JavaScript
-│       └── style.css          # Custom CSS styles
+│       ├── app.js                     # Main page interactivity & file upload
+│       ├── quote-calculator.js        # 3D printing calculator logic
+│       ├── manufacturing-calculators.js  # CNC, Sheet Metal, PCB calculators ✨ NEW
+│       └── style.css                  # Custom CSS styles
 ├── migrations/
-│   └── 0001_initial_schema.sql # Database schema
-├── dist/                      # Built files (auto-generated)
-├── ecosystem.config.cjs       # PM2 configuration
-├── package.json               # Dependencies and scripts
-├── wrangler.jsonc             # Cloudflare configuration
-├── README.md                  # This file
-└── SETUP.md                   # Detailed setup instructions
+│   └── 0001_initial_schema.sql       # Database schema
+├── dist/                              # Built files (auto-generated)
+├── ecosystem.config.cjs               # PM2 configuration
+├── package.json                       # Dependencies and scripts
+├── wrangler.jsonc                     # Cloudflare configuration
+├── README.md                          # This file
+└── SETUP.md                           # Detailed setup instructions
 ```
 
 ## 🎨 Pricing Structure
 
-### FDM Printing
-- **Base**: From ₹50/part
-- **Materials**: PLA, ABS, PETG, TPU
-- **Build Volume**: Up to 300x300x400mm
+### 3D Printing
+- **FDM**: From ₹50/part (PLA, ABS, PETG, TPU)
+- **SLA/Resin**: From ₹100/part (Standard, Tough, Clear resins)
+- **SLS**: From ₹200/part (Nylon PA12)
+- **Bulk Discounts**: 5-9 units (10% off), 10+ units (15% off)
 
-### SLA/Resin Printing (Most Popular)
-- **Base**: From ₹100/part
-- **Materials**: Standard, Tough, Clear resins
-- **Resolution**: 0.025mm layer height
+### CNC Machining ✨ NEW
+- **Starting**: From ₹300/part
+- **Materials**: Aluminum, Steel, Stainless, Brass, Copper, Plastics, Titanium
+- **Complexity**: Simple to Very Complex (5-axis work)
+- **Finishes**: As Machined, Deburred, Bead Blasted, Anodized, Powder Coated, Polished
+- **Bulk Discounts**: 10+ (10%), 20+ (15%), 50+ (20%)
 
-### SLS Printing
-- **Base**: From ₹200/part
-- **Materials**: Nylon PA12
-- **Features**: No support structures needed
+### Sheet Metal Fabrication ✨ NEW
+- **Starting**: From ₹250/part
+- **Materials**: Mild Steel, Stainless, Aluminum, Galvanized, Copper
+- **Thickness**: 0.5mm to 20mm
+- **Services**: Laser Cutting, Bending, Welding, Finishing
+- **Bulk Discounts**: 10+ (10%), 20+ (15%), 50+ (20%), 100+ (25%)
 
-### Bulk Discounts
-- 5-9 units: 10% off
-- 10+ units: 15% off
+### PCB Manufacturing ✨ NEW
+- **Starting**: From ₹50/board (quantity dependent)
+- **Layers**: 1 to 12 layers
+- **Finishes**: HASL, Lead-Free HASL, ENIG, Immersion Silver/Tin, OSP
+- **Assembly**: SMT component placement available
+- **Volume Pricing Tiers**:
+  - Prototype (5-9): 10% off
+  - Prototype Plus (10-19): 15% off
+  - Small Batch (20-49): 20% off
+  - Medium Volume (50-99): 25% off
+  - Production (100-499): 30% off
+  - High Volume (500-999): 35% off
+  - Mass Production (1000+): 40% off
 
 ## 🔗 Important Links
 
@@ -348,6 +433,13 @@ npm run logs             # View production logs
 
 ---
 
-**Last Updated**: 2025-10-14
+**Last Updated**: 2025-10-24
+
+**Latest Changes**:
+- ✨ Added comprehensive CNC Machining calculator with 8 materials and machine time estimation
+- ✨ Added Sheet Metal calculator with 15 thickness options and welding requirements
+- ✨ Added PCB Manufacturing calculator with 7-tier volume pricing and assembly options
+- ✨ All calculators feature real-time pricing and detailed cost breakdowns
+- 🚀 Deployed to production: https://038e02fb.passion3d-world.pages.dev
 
 Built with ❤️ by Passion 3D World | Powered by Cloudflare Pages

@@ -1232,75 +1232,218 @@ app.get('/cnc-machining-quote', (c) => {
         <title>CNC Machining Quote | Passion 3D World</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                    }
+                }
+            }
+        }
+        </script>
         <link href="/static/style.css" rel="stylesheet">
     </head>
     <body class="bg-gray-50">
-        <header class="bg-white shadow-sm">
-            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-                <a href="/" class="text-2xl font-bold">
-                    <i class="fas fa-cube text-primary mr-2"></i>Passion 3D World
-                </a>
-                <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg">
-                    <i class="fas fa-phone mr-2"></i>Call Now
-                </a>
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-cube text-primary text-3xl mr-3"></i>
+                        <a href="/" class="text-2xl font-bold text-gray-900">Passion 3D World</a>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-primary transition flex items-center">
+                                Services <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute hidden group-hover:block bg-white shadow-xl rounded-lg mt-2 py-2 w-56 z-50">
+                                <a href="/3d-printing-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-print mr-2 text-primary"></i>3D Printing
+                                </a>
+                                <a href="/cnc-machining-quote" class="block px-4 py-2 hover:bg-indigo-50 text-primary font-semibold">
+                                    <i class="fas fa-cogs mr-2"></i>CNC Machining
+                                </a>
+                                <a href="/sheet-metal-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-industry mr-2 text-primary"></i>Sheet Metal
+                                </a>
+                                <a href="/pcb-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-microchip mr-2 text-primary"></i>PCB Manufacturing
+                                </a>
+                            </div>
+                        </div>
+                        <a href="/#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+                    </div>
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        <i class="fas fa-phone mr-2"></i>Call Now
+                    </a>
+                </div>
             </nav>
         </header>
 
-        <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold mb-4">
-                    <i class="fas fa-cogs text-primary mr-3"></i>CNC Machining Quote
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-cogs text-primary mr-3"></i>
+                    CNC Machining Quote Calculator
                 </h1>
-                <p class="text-xl text-gray-600">Precision CNC milling and turning services</p>
+                <p class="text-xl text-gray-600">Get instant pricing for precision CNC machining</p>
             </div>
 
-            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-8">
-                <h3 class="font-bold text-lg mb-2">
-                    <i class="fas fa-wrench text-yellow-600 mr-2"></i>CNC Machining Service
-                </h3>
-                <p class="text-gray-700 mb-4">
-                    We're currently setting up our CNC machining capabilities. Please contact us directly for quotes.
-                </p>
-                <div class="flex gap-4">
-                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
-                        <i class="fas fa-phone mr-2"></i>Call: +91 9137361474
-                    </a>
-                    <a href="mailto:info@passion3dworld.com" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold">
-                        <i class="fas fa-envelope mr-2"></i>Email Us
-                    </a>
-                </div>
-            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Quote Form -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-6">Part Specifications</h2>
+                        
+                        <form id="cncQuoteForm" class="space-y-6">
+                            <!-- Material Selection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-cube mr-2 text-primary"></i>Material
+                                </label>
+                                <select id="cncMaterial" onchange="calculateCNCPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="aluminum">Aluminum 6061</option>
+                                    <option value="steel">Mild Steel</option>
+                                    <option value="stainless">Stainless Steel 304</option>
+                                    <option value="brass">Brass</option>
+                                    <option value="copper">Copper</option>
+                                    <option value="plastic_abs">Plastic - ABS</option>
+                                    <option value="plastic_pom">Plastic - POM (Delrin)</option>
+                                    <option value="titanium">Titanium</option>
+                                </select>
+                            </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">CNC Milling</h3>
-                    <p class="text-gray-600 mb-4">3-axis, 4-axis, and 5-axis milling</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Aluminum, Steel, Brass</li>
-                        <li>✓ High precision ±0.01mm</li>
-                        <li>✓ Complex geometries</li>
-                    </ul>
+                            <!-- Dimensions -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-ruler-combined mr-2 text-primary"></i>Part Dimensions (mm)
+                                </label>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <input type="number" id="cncLength" placeholder="Length" value="100" onchange="calculateCNCPrice()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <input type="number" id="cncWidth" placeholder="Width" value="100" onchange="calculateCNCPrice()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <input type="number" id="cncHeight" placeholder="Height" value="50" onchange="calculateCNCPrice()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">Surface Area: <span id="cncSurfaceArea" class="font-semibold">0 cm²</span></p>
+                            </div>
+
+                            <!-- Complexity Level -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">
+                                    <i class="fas fa-sliders-h mr-2 text-primary"></i>Machining Complexity
+                                </label>
+                                <select id="cncComplexity" onchange="calculateCNCPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="simple">Simple - Basic shapes, minimal features</option>
+                                    <option value="medium" selected>Medium - Multiple features, some intricate work</option>
+                                    <option value="complex">Complex - Complex geometries, tight tolerances</option>
+                                    <option value="very_complex">Very Complex - 5-axis work, very tight tolerances</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-2">Estimated Machine Time: <span id="cncMachineTime" class="font-semibold">0 hrs</span></p>
+                            </div>
+
+                            <!-- Surface Finish -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-paint-brush mr-2 text-primary"></i>Surface Finish
+                                </label>
+                                <select id="cncFinish" onchange="calculateCNCPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="as_machined">As Machined</option>
+                                    <option value="deburred">Deburred</option>
+                                    <option value="bead_blasted">Bead Blasted</option>
+                                    <option value="anodized">Anodized (Aluminum only)</option>
+                                    <option value="powder_coated">Powder Coated</option>
+                                    <option value="polished">Polished</option>
+                                </select>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-sort-numeric-up mr-2 text-primary"></i>Quantity
+                                </label>
+                                <input type="number" id="cncQuantity" value="1" min="1" onchange="calculateCNCPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <p class="text-sm text-gray-500 mt-2">💡 Bulk Discounts: 10+ (10% off), 20+ (15% off), 50+ (20% off)</p>
+                            </div>
+
+                            <button type="button" onclick="calculateCNCPrice()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                                <i class="fas fa-calculator mr-2"></i>Calculate Price
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">CNC Turning</h3>
-                    <p class="text-gray-600 mb-4">Precision lathe work</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Cylindrical parts</li>
-                        <li>✓ Threading capabilities</li>
-                        <li>✓ Various materials</li>
-                    </ul>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">Surface Finishing</h3>
-                    <p class="text-gray-600 mb-4">Professional finishing</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Anodizing</li>
-                        <li>✓ Powder coating</li>
-                        <li>✓ Polishing</li>
-                    </ul>
+
+                <!-- Price Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-8 sticky top-24">
+                        <h3 class="text-xl font-bold mb-6">Price Breakdown</h3>
+                        
+                        <div id="cncPriceBreakdown" class="space-y-4 mb-6">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Material:</span>
+                                <span id="cncMaterialCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Machining:</span>
+                                <span id="cncMachiningCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Setup:</span>
+                                <span id="cncSetupCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Finish:</span>
+                                <span id="cncFinishCost">₹0</span>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between font-semibold">
+                                <span>Per Part:</span>
+                                <span id="cncPricePerPart">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Quantity (×<span id="cncQtyDisplay">1</span>):</span>
+                                <span id="cncQuantityCost">₹0</span>
+                            </div>
+                            <div id="cncDiscountSection" class="hidden">
+                                <div class="flex justify-between text-green-600">
+                                    <span>Bulk Discount (<span id="cncDiscountPercent">0</span>):</span>
+                                    <span id="cncDiscount">-₹0</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between text-2xl font-bold text-primary">
+                                <span>Total:</span>
+                                <span id="cncTotalPrice">₹0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 rounded-lg p-4 mb-6">
+                            <h4 class="font-semibold mb-2">
+                                <i class="fas fa-info-circle text-primary mr-2"></i>Includes:
+                            </h4>
+                            <ul class="text-sm space-y-1 text-gray-700">
+                                <li>✓ CNC Machining</li>
+                                <li>✓ Precision ±0.01mm</li>
+                                <li>✓ Quality Inspection</li>
+                                <li>✓ Deburring</li>
+                            </ul>
+                        </div>
+
+                        <a href="tel:+919137361474" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-green-700 transition mb-3">
+                            <i class="fas fa-phone mr-2"></i>Call to Order
+                        </a>
+                        <a href="mailto:info@passion3dworld.com" class="block w-full border-2 border-primary text-primary text-center py-3 rounded-lg font-semibold hover:bg-indigo-50 transition">
+                            <i class="fas fa-envelope mr-2"></i>Email Quote
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <script src="/static/manufacturing-calculators.js"></script>
     </body>
     </html>
   `)
@@ -1317,75 +1460,265 @@ app.get('/sheet-metal-quote', (c) => {
         <title>Sheet Metal Quote | Passion 3D World</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                    }
+                }
+            }
+        }
+        </script>
         <link href="/static/style.css" rel="stylesheet">
     </head>
     <body class="bg-gray-50">
-        <header class="bg-white shadow-sm">
-            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-                <a href="/" class="text-2xl font-bold">
-                    <i class="fas fa-cube text-primary mr-2"></i>Passion 3D World
-                </a>
-                <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg">
-                    <i class="fas fa-phone mr-2"></i>Call Now
-                </a>
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-cube text-primary text-3xl mr-3"></i>
+                        <a href="/" class="text-2xl font-bold text-gray-900">Passion 3D World</a>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-primary transition flex items-center">
+                                Services <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute hidden group-hover:block bg-white shadow-xl rounded-lg mt-2 py-2 w-56 z-50">
+                                <a href="/3d-printing-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-print mr-2 text-primary"></i>3D Printing
+                                </a>
+                                <a href="/cnc-machining-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-cogs mr-2 text-primary"></i>CNC Machining
+                                </a>
+                                <a href="/sheet-metal-quote" class="block px-4 py-2 hover:bg-indigo-50 text-primary font-semibold">
+                                    <i class="fas fa-industry mr-2"></i>Sheet Metal
+                                </a>
+                                <a href="/pcb-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-microchip mr-2 text-primary"></i>PCB Manufacturing
+                                </a>
+                            </div>
+                        </div>
+                        <a href="/#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+                    </div>
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        <i class="fas fa-phone mr-2"></i>Call Now
+                    </a>
+                </div>
             </nav>
         </header>
 
-        <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold mb-4">
-                    <i class="fas fa-industry text-primary mr-3"></i>Sheet Metal Fabrication Quote
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-industry text-primary mr-3"></i>
+                    Sheet Metal Fabrication Quote Calculator
                 </h1>
-                <p class="text-xl text-gray-600">Custom metal bending, cutting, and forming</p>
+                <p class="text-xl text-gray-600">Get instant pricing for custom sheet metal fabrication</p>
             </div>
 
-            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-8">
-                <h3 class="font-bold text-lg mb-2">
-                    <i class="fas fa-hard-hat text-yellow-600 mr-2"></i>Sheet Metal Service
-                </h3>
-                <p class="text-gray-700 mb-4">
-                    We're expanding our sheet metal fabrication services. Contact us for custom quotes.
-                </p>
-                <div class="flex gap-4">
-                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
-                        <i class="fas fa-phone mr-2"></i>Call: +91 9137361474
-                    </a>
-                    <a href="mailto:info@passion3dworld.com" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold">
-                        <i class="fas fa-envelope mr-2"></i>Email Us
-                    </a>
-                </div>
-            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Quote Form -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-6">Fabrication Details</h2>
+                        
+                        <form id="sheetMetalQuoteForm" class="space-y-6">
+                            <!-- Material Selection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-cube mr-2 text-primary"></i>Material Type
+                                </label>
+                                <select id="sheetMaterial" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="mild_steel">Mild Steel</option>
+                                    <option value="stainless">Stainless Steel 304</option>
+                                    <option value="aluminum">Aluminum 5052</option>
+                                    <option value="galvanized">Galvanized Steel</option>
+                                    <option value="copper">Copper</option>
+                                </select>
+                            </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">Laser Cutting</h3>
-                    <p class="text-gray-600 mb-4">Precision cutting services</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Steel, Aluminum, Stainless</li>
-                        <li>✓ Up to 20mm thickness</li>
-                        <li>✓ Complex patterns</li>
-                    </ul>
+                            <!-- Thickness Selector -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-compress mr-2 text-primary"></i>Material Thickness (mm)
+                                </label>
+                                <select id="sheetThickness" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="0.5">0.5mm (26 gauge)</option>
+                                    <option value="0.8">0.8mm (22 gauge)</option>
+                                    <option value="1.0" selected>1.0mm (20 gauge)</option>
+                                    <option value="1.2">1.2mm (18 gauge)</option>
+                                    <option value="1.5">1.5mm (16 gauge)</option>
+                                    <option value="2.0">2.0mm (14 gauge)</option>
+                                    <option value="3.0">3.0mm (11 gauge)</option>
+                                    <option value="4.0">4.0mm (8 gauge)</option>
+                                    <option value="5.0">5.0mm</option>
+                                    <option value="6.0">6.0mm (1/4 inch)</option>
+                                    <option value="8.0">8.0mm</option>
+                                    <option value="10.0">10.0mm</option>
+                                    <option value="12.0">12.0mm</option>
+                                    <option value="15.0">15.0mm</option>
+                                    <option value="20.0">20.0mm</option>
+                                </select>
+                            </div>
+
+                            <!-- Sheet Dimensions -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-ruler-combined mr-2 text-primary"></i>Sheet Dimensions (mm)
+                                </label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="number" id="sheetLength" placeholder="Length" value="200" onchange="calculateSheetMetalPrice()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <input type="number" id="sheetWidth" placeholder="Width" value="150" onchange="calculateSheetMetalPrice()" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                                <div class="mt-2 text-sm text-gray-500">
+                                    <p>Sheet Area: <span id="sheetArea" class="font-semibold">0 cm²</span></p>
+                                    <p>Cutting Perimeter: <span id="sheetPerimeter" class="font-semibold">0 cm</span></p>
+                                </div>
+                            </div>
+
+                            <!-- Bending Details -->
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-angle-double-right mr-2 text-primary"></i>Number of Bends
+                                    </label>
+                                    <input type="number" id="bendCount" value="0" min="0" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-project-diagram mr-2 text-primary"></i>Bending Complexity
+                                    </label>
+                                    <select id="bendComplexity" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="simple">Simple - 90° bends</option>
+                                        <option value="medium" selected>Medium - Multiple angles</option>
+                                        <option value="complex">Complex - Tight tolerances</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Welding Requirements -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-fire mr-2 text-primary"></i>Welding Requirements
+                                </label>
+                                <select id="welding" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="none">No Welding</option>
+                                    <option value="spot">Spot Welding</option>
+                                    <option value="seam_short">Seam Welding (<50cm)</option>
+                                    <option value="seam_long">Seam Welding (>50cm)</option>
+                                    <option value="full_assembly">Full Welded Assembly</option>
+                                </select>
+                            </div>
+
+                            <!-- Surface Finish -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-paint-brush mr-2 text-primary"></i>Surface Finish
+                                </label>
+                                <select id="sheetFinish" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="as_cut">As Cut</option>
+                                    <option value="deburred">Deburred</option>
+                                    <option value="powder_coated">Powder Coated</option>
+                                    <option value="painted">Painted</option>
+                                    <option value="polished">Polished</option>
+                                    <option value="zinc_plated">Zinc Plated</option>
+                                </select>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-sort-numeric-up mr-2 text-primary"></i>Quantity
+                                </label>
+                                <input type="number" id="sheetQuantity" value="1" min="1" onchange="calculateSheetMetalPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <p class="text-sm text-gray-500 mt-2">💡 Bulk Discounts: 10+ (10%), 20+ (15%), 50+ (20%), 100+ (25%)</p>
+                            </div>
+
+                            <button type="button" onclick="calculateSheetMetalPrice()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                                <i class="fas fa-calculator mr-2"></i>Calculate Price
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">Metal Bending</h3>
-                    <p class="text-gray-600 mb-4">CNC press brake forming</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Accurate angles</li>
-                        <li>✓ Multiple bends</li>
-                        <li>✓ Various materials</li>
-                    </ul>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">Welding & Assembly</h3>
-                    <p class="text-gray-600 mb-4">Professional fabrication</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ TIG & MIG welding</li>
-                        <li>✓ Assembly services</li>
-                        <li>✓ Finishing options</li>
-                    </ul>
+
+                <!-- Price Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-8 sticky top-24">
+                        <h3 class="text-xl font-bold mb-6">Price Breakdown</h3>
+                        
+                        <div id="sheetPriceBreakdown" class="space-y-4 mb-6">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Material:</span>
+                                <span id="sheetMaterialCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Cutting:</span>
+                                <span id="sheetCuttingCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Bending:</span>
+                                <span id="sheetBendingCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Welding:</span>
+                                <span id="sheetWeldingCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Finish:</span>
+                                <span id="sheetFinishCost">₹0</span>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between font-semibold">
+                                <span>Per Part:</span>
+                                <span id="sheetPricePerPart">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Quantity (×<span id="sheetQtyDisplay">1</span>):</span>
+                                <span id="sheetQuantityCost">₹0</span>
+                            </div>
+                            <div id="sheetDiscountSection" class="hidden">
+                                <div class="flex justify-between text-green-600">
+                                    <span>Bulk Discount (<span id="sheetDiscountPercent">0</span>):</span>
+                                    <span id="sheetDiscount">-₹0</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between text-2xl font-bold text-primary">
+                                <span>Total:</span>
+                                <span id="sheetTotalPrice">₹0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 rounded-lg p-4 mb-6">
+                            <h4 class="font-semibold mb-2">
+                                <i class="fas fa-info-circle text-primary mr-2"></i>Includes:
+                            </h4>
+                            <ul class="text-sm space-y-1 text-gray-700">
+                                <li>✓ Laser/Plasma Cutting</li>
+                                <li>✓ CNC Press Brake</li>
+                                <li>✓ Quality Check</li>
+                                <li>✓ Basic Deburring</li>
+                            </ul>
+                        </div>
+
+                        <a href="tel:+919137361474" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-green-700 transition mb-3">
+                            <i class="fas fa-phone mr-2"></i>Call to Order
+                        </a>
+                        <a href="mailto:info@passion3dworld.com" class="block w-full border-2 border-primary text-primary text-center py-3 rounded-lg font-semibold hover:bg-indigo-50 transition">
+                            <i class="fas fa-envelope mr-2"></i>Email Quote
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <script src="/static/manufacturing-calculators.js"></script>
     </body>
     </html>
   `)
@@ -1402,75 +1735,319 @@ app.get('/pcb-quote', (c) => {
         <title>PCB Manufacturing Quote | Passion 3D World</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                    }
+                }
+            }
+        }
+        </script>
         <link href="/static/style.css" rel="stylesheet">
     </head>
     <body class="bg-gray-50">
-        <header class="bg-white shadow-sm">
-            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-                <a href="/" class="text-2xl font-bold">
-                    <i class="fas fa-cube text-primary mr-2"></i>Passion 3D World
-                </a>
-                <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg">
-                    <i class="fas fa-phone mr-2"></i>Call Now
-                </a>
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-cube text-primary text-3xl mr-3"></i>
+                        <a href="/" class="text-2xl font-bold text-gray-900">Passion 3D World</a>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="/" class="text-gray-700 hover:text-primary transition">Home</a>
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-primary transition flex items-center">
+                                Services <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute hidden group-hover:block bg-white shadow-xl rounded-lg mt-2 py-2 w-56 z-50">
+                                <a href="/3d-printing-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-print mr-2 text-primary"></i>3D Printing
+                                </a>
+                                <a href="/cnc-machining-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-cogs mr-2 text-primary"></i>CNC Machining
+                                </a>
+                                <a href="/sheet-metal-quote" class="block px-4 py-2 hover:bg-indigo-50">
+                                    <i class="fas fa-industry mr-2 text-primary"></i>Sheet Metal
+                                </a>
+                                <a href="/pcb-quote" class="block px-4 py-2 hover:bg-indigo-50 text-primary font-semibold">
+                                    <i class="fas fa-microchip mr-2"></i>PCB Manufacturing
+                                </a>
+                            </div>
+                        </div>
+                        <a href="/#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+                    </div>
+                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        <i class="fas fa-phone mr-2"></i>Call Now
+                    </a>
+                </div>
             </nav>
         </header>
 
-        <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold mb-4">
-                    <i class="fas fa-microchip text-primary mr-3"></i>PCB Manufacturing Quote
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-microchip text-primary mr-3"></i>
+                    PCB Manufacturing Quote Calculator
                 </h1>
-                <p class="text-xl text-gray-600">Custom PCB fabrication and assembly</p>
+                <p class="text-xl text-gray-600">Get instant pricing for custom PCB fabrication & assembly</p>
             </div>
 
-            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 mb-8">
-                <h3 class="font-bold text-lg mb-2">
-                    <i class="fas fa-microchip text-yellow-600 mr-2"></i>PCB Manufacturing Service
-                </h3>
-                <p class="text-gray-700 mb-4">
-                    We're establishing partnerships for PCB manufacturing. Please contact us for quotes and lead times.
-                </p>
-                <div class="flex gap-4">
-                    <a href="tel:+919137361474" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
-                        <i class="fas fa-phone mr-2"></i>Call: +91 9137361474
-                    </a>
-                    <a href="mailto:info@passion3dworld.com" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold">
-                        <i class="fas fa-envelope mr-2"></i>Email Us
-                    </a>
-                </div>
-            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Quote Form -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold mb-6">PCB Specifications</h2>
+                        
+                        <form id="pcbQuoteForm" class="space-y-6">
+                            <!-- Layer Count Selector -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">
+                                    <i class="fas fa-layer-group mr-2 text-primary"></i>PCB Layers
+                                </label>
+                                <div class="grid grid-cols-4 md:grid-cols-7 gap-2">
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" id="pcbLayers" value="1" class="peer sr-only">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">1</h4>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" value="2" checked class="peer sr-only" onchange="calculatePCBPrice()">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">2</h4>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" value="4" class="peer sr-only" onchange="calculatePCBPrice()">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">4</h4>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" value="6" class="peer sr-only" onchange="calculatePCBPrice()">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">6</h4>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" value="8" class="peer sr-only" onchange="calculatePCBPrice()">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">8</h4>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" value="10" class="peer sr-only" onchange="calculatePCBPrice()">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">10</h4>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="pcbLayers" value="12" class="peer sr-only" onchange="calculatePCBPrice()">
+                                        <div class="border-2 border-gray-300 rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-indigo-50">
+                                            <h4 class="font-semibold">12</h4>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">Standard PCB</h3>
-                    <p class="text-gray-600 mb-4">Single and double-sided boards</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ FR-4 material</li>
-                        <li>✓ Lead-free HASL</li>
-                        <li>✓ Fast turnaround</li>
-                    </ul>
+                            <!-- Board Dimensions -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-ruler-combined mr-2 text-primary"></i>Board Dimensions (mm)
+                                </label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <input type="number" id="pcbLength" placeholder="Length" value="100" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <p class="text-xs text-gray-500 mt-1">Length (mm)</p>
+                                    </div>
+                                    <div>
+                                        <input type="number" id="pcbWidth" placeholder="Width" value="80" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <p class="text-xs text-gray-500 mt-1">Width (mm)</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-500">
+                                    <p>Board Size: <span id="pcbBoardSize" class="font-semibold">100mm × 80mm</span></p>
+                                    <p>Board Area: <span id="pcbArea" class="font-semibold">0 cm²</span></p>
+                                </div>
+                            </div>
+
+                            <!-- PCB Specifications -->
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-compress mr-2 text-primary"></i>Board Thickness
+                                    </label>
+                                    <select id="pcbThickness" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="0.8">0.8mm</option>
+                                        <option value="1.0">1.0mm</option>
+                                        <option value="1.6" selected>1.6mm (Standard)</option>
+                                        <option value="2.0">2.0mm</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-ethernet mr-2 text-primary"></i>Copper Weight
+                                    </label>
+                                    <select id="copperWeight" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="1oz" selected>1 oz (35µm)</option>
+                                        <option value="2oz">2 oz (70µm)</option>
+                                        <option value="3oz">3 oz (105µm)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Surface Finish & Silkscreen -->
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-layer-group mr-2 text-primary"></i>Surface Finish
+                                    </label>
+                                    <select id="surfaceFinish" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="hasl">HASL (Hot Air Solder Leveling)</option>
+                                        <option value="lead_free_hasl" selected>Lead-Free HASL</option>
+                                        <option value="enig">ENIG (Gold)</option>
+                                        <option value="immersion_silver">Immersion Silver</option>
+                                        <option value="immersion_tin">Immersion Tin</option>
+                                        <option value="osp">OSP</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-font mr-2 text-primary"></i>Silkscreen
+                                    </label>
+                                    <select id="silkscreen" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                        <option value="none">No Silkscreen</option>
+                                        <option value="one_side" selected>One Side</option>
+                                        <option value="both_sides">Both Sides</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-sort-numeric-up mr-2 text-primary"></i>Quantity (boards)
+                                </label>
+                                <input type="number" id="pcbQuantity" value="10" min="1" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <div class="mt-2 text-sm text-gray-500">
+                                    <p class="font-semibold">💡 Quantity Pricing Tiers:</p>
+                                    <div class="grid grid-cols-2 gap-2 mt-1">
+                                        <div>5-9: 10% off</div>
+                                        <div>10-19: 15% off</div>
+                                        <div>20-49: 20% off</div>
+                                        <div>50-99: 25% off</div>
+                                        <div>100-499: 30% off</div>
+                                        <div>500-999: 35% off</div>
+                                        <div>1000+: 40% off</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PCB Assembly Option -->
+                            <div class="border-2 border-gray-200 rounded-lg p-4">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" id="assembly" onchange="calculatePCBPrice()" class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary">
+                                    <span class="ml-3 font-medium text-gray-900">
+                                        <i class="fas fa-wrench text-primary mr-2"></i>Add PCB Assembly (SMT)
+                                    </span>
+                                </label>
+                                <div id="componentCountDiv" class="mt-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Number of Components (per board)</label>
+                                    <input type="number" id="componentCount" value="0" min="0" onchange="calculatePCBPrice()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                    <p class="text-xs text-gray-500 mt-1">Assembly includes component placement, soldering, and testing</p>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="calculatePCBPrice()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                                <i class="fas fa-calculator mr-2"></i>Calculate Price
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">Multi-Layer PCB</h3>
-                    <p class="text-gray-600 mb-4">4 to 12 layer boards</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Controlled impedance</li>
-                        <li>✓ HDI options</li>
-                        <li>✓ Various finishes</li>
-                    </ul>
-                </div>
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <h3 class="font-bold text-lg mb-3">PCB Assembly</h3>
-                    <p class="text-gray-600 mb-4">SMT and through-hole</p>
-                    <ul class="space-y-2 text-sm">
-                        <li>✓ Component sourcing</li>
-                        <li>✓ Testing services</li>
-                        <li>✓ Low to high volume</li>
-                    </ul>
+
+                <!-- Price Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-8 sticky top-24">
+                        <h3 class="text-xl font-bold mb-6">Price Breakdown</h3>
+                        
+                        <div id="pcbPriceBreakdown" class="space-y-4 mb-6">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Per Board:</span>
+                                <span id="pcbFabCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Setup Cost:</span>
+                                <span id="pcbSetupCost">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Surface Finish:</span>
+                                <span id="pcbFinishCost">₹0</span>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Quantity (×<span id="pcbQtyDisplay">1</span>):</span>
+                                <span id="pcbFabTotal">₹0</span>
+                            </div>
+                            <div id="pcbTierSection" class="hidden bg-blue-50 rounded-lg p-3">
+                                <div class="flex justify-between text-blue-700 font-semibold mb-1">
+                                    <span id="pcbTierMessage">Prototype Tier</span>
+                                    <span id="pcbTierDiscount">10%</span>
+                                </div>
+                                <div class="flex justify-between text-green-600">
+                                    <span>Discount:</span>
+                                    <span id="pcbDiscount">-₹0</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between font-semibold text-lg">
+                                <span>Fabrication Total:</span>
+                                <span id="pcbFabFinal">₹0</span>
+                            </div>
+                            <div id="pcbAssemblySection" class="hidden border-t-2 border-gray-200 pt-4">
+                                <h4 class="font-semibold mb-2 text-purple-700">
+                                    <i class="fas fa-wrench mr-2"></i>Assembly
+                                </h4>
+                                <div class="flex justify-between text-gray-600 mb-2">
+                                    <span>Components (<span id="pcbComponentCount">0</span>):</span>
+                                    <span id="pcbAssemblyCost">₹0</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between text-2xl font-bold text-primary">
+                                <span>Total:</span>
+                                <span id="pcbTotalPrice">₹0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 rounded-lg p-4 mb-6">
+                            <h4 class="font-semibold mb-2">
+                                <i class="fas fa-info-circle text-primary mr-2"></i>Includes:
+                            </h4>
+                            <ul class="text-sm space-y-1 text-gray-700">
+                                <li>✓ PCB Fabrication</li>
+                                <li>✓ Electrical Testing</li>
+                                <li>✓ Quality Inspection</li>
+                                <li>✓ Standard Packaging</li>
+                            </ul>
+                        </div>
+
+                        <a href="tel:+919137361474" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-green-700 transition mb-3">
+                            <i class="fas fa-phone mr-2"></i>Call to Order
+                        </a>
+                        <a href="mailto:info@passion3dworld.com" class="block w-full border-2 border-primary text-primary text-center py-3 rounded-lg font-semibold hover:bg-indigo-50 transition">
+                            <i class="fas fa-envelope mr-2"></i>Email Quote
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <script src="/static/manufacturing-calculators.js"></script>
     </body>
     </html>
   `)
